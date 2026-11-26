@@ -16,7 +16,45 @@
 |---|---|
 | `mcp_server_stdio.py` | MCP 服务端，提供日期、时间两个工具，支持三种传输 |
 | `MCP_client.py` | MCP 客户端，连接服务端并驱动 LangChain Agent |
+| `skill_client.py` | 本地 Skills 客户端，扫描 `skills/` 目录并把技能交给 Agent 按需加载 |
+| `skills/` | 技能目录，每个技能一个文件夹，内含 `SKILL.md` |
 | `requirements.txt` | Python 依赖清单 |
+
+## 本地 Skills 客户端
+
+除了 MCP，本项目还演示了另一种「技能」组织方式：技能以 `SKILL.md` 形式存放在本地，客户端扫描后把技能清单写进系统提示，Agent 需要时再调用 `load_skill` 读取完整说明。
+
+技能目录结构：
+
+```text
+skills/
+├── translate/
+│   └── SKILL.md
+└── code-review/
+    └── SKILL.md
+```
+
+`SKILL.md` 格式：
+
+```markdown
+---
+name: translate
+description: 中英互译。当用户要求翻译、润色或改写外语内容时使用。
+---
+# 翻译技能
+
+（正文：步骤、输出格式、示例）
+```
+
+运行：
+
+```bash
+python skill_client.py
+```
+
+预期输出：Agent 先调用 `load_skill` 加载 `translate` 技能，再按技能规范返回译文。
+
+新增技能只需在 `skills/` 下建一个文件夹并写 `SKILL.md`，无需改代码。
 
 ## 部署指南
 
